@@ -1,6 +1,7 @@
 package dto;
 
-import Items.superobject.DetailMenu;
+import Menus.main.ItemMenu;
+import Menus.detail.DetailMenu;
 import lombok.Data;
 
 @Data
@@ -10,6 +11,7 @@ public class Item {
     private int count = 0;
 
     public int calculateItemPrice() {
-        return (getMenu().getPrice() + (isHasIce() ? 1 : 0) * 500) * getCount();
+        int iceWeight = (getMenu().getItemMenu().equals(ItemMenu.COFFEE) || getMenu().getItemMenu().equals(ItemMenu.TEA)) && isHasIce() ? 1 : 0;
+        return (getMenu().getPrice() + iceWeight * 500) * getCount();
     }
 }

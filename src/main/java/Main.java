@@ -1,3 +1,4 @@
+import constant.Color;
 import module.MenuInit;
 import module.Order;
 
@@ -19,10 +20,11 @@ public class Main {
         // http://patorjk.com/software/taag  Font Name: Bloody
         try (BufferedReader br = new BufferedReader(new FileReader("banner.txt"))) {
             String line;
+            System.out.println(Color.ANSI_RED);
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
             }
-            System.out.println();
+            System.out.println(Color.ANSI_RESET);
         } catch (IOException e) {
             //banner.txt 없습니다
         }

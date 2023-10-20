@@ -1,6 +1,6 @@
-package Items;
+package Menus.main;
 
-import Items.superobject.Menu;
+import Menus.main.Menu;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

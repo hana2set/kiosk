@@ -1,10 +1,10 @@
-package Items;
+package Menus.detail;
 
-import Items.superobject.DetailMenu;
+import Menus.detail.DetailMenu;
+import Menus.main.ItemMenu;
 import lombok.*;
 
 @Getter
-@AllArgsConstructor
 public enum Coffee implements DetailMenu {
     ESPRESSO("espresso", 3000, "에스프레소"),
     AMERICANO("americano", 3000, "아메리카노"),
@@ -14,8 +14,15 @@ public enum Coffee implements DetailMenu {
     HAZELNUTLATTE("hazelnut latte", 3800, "헤이즐럿라떼")
     ;
 
+    private ItemMenu itemMenu;
     private String name;
     private int price;
     private String desc;
 
+    Coffee(String name, int price, String desc) {
+        this.name = name;
+        this.price = price;
+        this.desc = desc;
+        this.itemMenu = ItemMenu.COFFEE;
+    }
 }

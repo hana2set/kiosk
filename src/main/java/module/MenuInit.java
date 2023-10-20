@@ -1,8 +1,11 @@
 package module;
 
-import Items.*;
-import Items.superobject.DetailMenu;
-import Items.superobject.Menu;
+import Menus.detail.DetailMenu;
+import Menus.main.ItemMenu;
+import Menus.detail.Ade;
+import Menus.detail.Coffee;
+import Menus.main.Menu;
+import Menus.detail.Tea;
 
 import java.util.*;
 

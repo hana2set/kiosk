@@ -1,8 +1,9 @@
 package module;
 
-import Items.*;
-import Items.superobject.DetailMenu;
-import Items.superobject.Menu;
+import Menus.detail.DetailMenu;
+import Menus.main.ItemMenu;
+import Menus.main.OrderMenu;
+import Menus.main.Menu;
 import constant.Color;
 import constant.OrderLevel;
 import dto.Item;
@@ -16,7 +17,7 @@ public class Order {
     OrderMenu[] orderMenus = OrderMenu.values();    //명령 목록
 
     OrderLevel orderLevel = OrderLevel.MAIN;        //주문 계층
-    Menu detailMenu;                                //선택된 상세 메뉴
+    ItemMenu selectMenu;                            //선택된 상세 메뉴
     Item selectItem = new Item();                   //선택된 상품
     List<Item> basket = new ArrayList<>();          //장바구니
 
@@ -32,8 +33,8 @@ public class Order {
                     case MAIN -> branchMain(num);
                     case DETAIL -> branchDetail(num);
                     case ADD -> branchAdd(num);
-                    case CHECKCOUNT -> branchCheckCount(num);
-                    case CHECKICE -> branchCheckIce(num);
+                    case COUNTOPTION -> branchCheckCount(num);
+                    case ICEOPTION -> branchCheckIce(num);
                     case CANCEL -> branchCancel(num);
                     case ORDER -> branchOrder(num);
                 };
@@ -74,10 +75,10 @@ public class Order {
     public OrderLevel branchDetail(int num) throws WrongInputException {
         OrderLevel orderLevel = OrderLevel.DETAIL;
 
-        if (0 < num && num <= menuMap.get(detailMenu).size()) {
-            DetailMenu selectMenu = menuMap.get(this.detailMenu).get(num - 1);
-            selectItem.setMenu(selectMenu);
-            getAddBasket(selectMenu);
+        if (0 < num && num <= menuMap.get(selectMenu).size()) {
+            DetailMenu detailMenu = menuMap.get(selectMenu).get(num - 1);
+            selectItem.setMenu(detailMenu);
+            getAddBasket(detailMenu);
             orderLevel = OrderLevel.ADD;
         } else {
             throw new WrongInputException("잘못된 입력값입니다.");
@@ -91,8 +92,8 @@ public class Order {
 
         if (num == 1) {
             selectItem.setCount(selectItem.getCount() + 1);
-            if (detailMenu == ItemMenu.COFFEE
-                    || detailMenu == ItemMenu.TEA) {
+            if (selectMenu == ItemMenu.COFFEE
+                    || selectMenu == ItemMenu.TEA) {
                 orderLevel = getCheckIce();
             } else {
                 addBasket();
@@ -110,14 +111,14 @@ public class Order {
     }
 
     public OrderLevel branchCheckCount(int num) throws WrongInputException {
-        OrderLevel orderLevel = OrderLevel.CHECKCOUNT;
+        OrderLevel orderLevel = OrderLevel.COUNTOPTION;
 
         if (0 < num && num < 100) {
             int totalCount = selectItem.getCount() + num;
             if (totalCount < 100) {
                 selectItem.setCount(totalCount);
-                if (detailMenu == ItemMenu.COFFEE
-                        || detailMenu == ItemMenu.TEA) {
+                if (selectMenu == ItemMenu.COFFEE
+                        || selectMenu == ItemMenu.TEA) {
                     orderLevel = getCheckIce();
                 } else {
                     addBasket();
@@ -136,7 +137,7 @@ public class Order {
     }
 
     public OrderLevel branchCheckIce(int num) throws WrongInputException {
-        OrderLevel orderLevel = OrderLevel.CHECKICE;
+        OrderLevel orderLevel = OrderLevel.ICEOPTION;
 
         if (num == 1) {
             selectItem.setHasIce(true);
@@ -153,14 +154,12 @@ public class Order {
         return orderLevel;
     }
 
-
-
     public OrderLevel branchOrder(int num) throws WrongInputException, InterruptedException {
         OrderLevel orderLevel = OrderLevel.ORDER;
 
         if (num == 1) {
             Barista.makeDrink(basket);
-            basket = new ArrayList<>(); //장바구니 초기화
+            resetBasket(); //장바구니 초기화
             orderLevel = getMainMenu();
         } else if (num == 2) {
             orderLevel = getMainMenu();
@@ -171,12 +170,11 @@ public class Order {
         return orderLevel;
     }
 
-
     public OrderLevel branchCancel(int num) throws WrongInputException {
-        OrderLevel orderLevel = OrderLevel.CHECKCOUNT;
+        OrderLevel orderLevel = OrderLevel.COUNTOPTION;
 
         if (num == 1) {
-            cancelBasket();
+            resetBasket();
             orderLevel = getMainMenu();
         } else if (num == 2) {
             orderLevel = getMainMenu();
@@ -198,10 +196,10 @@ public class Order {
 
         return OrderLevel.MAIN;
     }
-    public OrderLevel getMenuDetail(Menu menu) {
+    public OrderLevel getMenuDetail(ItemMenu menu) {
         System.out.println("[ 상세 메뉴 목록 ]");
         printDetailMenuItem(menuMap.get(menu), 0);
-        detailMenu = menu;
+        selectMenu = menu;
 
         return OrderLevel.DETAIL;
 
@@ -219,7 +217,7 @@ public class Order {
     public OrderLevel getCheckCount() {
         System.out.println("주문할 수량을 입력해주세요.(1-99)");
 
-        return OrderLevel.CHECKCOUNT;
+        return OrderLevel.COUNTOPTION;
     }
 
     public OrderLevel getCheckIce() {
@@ -227,7 +225,7 @@ public class Order {
         System.out.println();
         System.out.println("1. 추가       2. 추가 없음");
 
-        return OrderLevel.CHECKICE;
+        return OrderLevel.ICEOPTION;
     }
 
     public OrderLevel getOrder() {
@@ -259,7 +257,7 @@ public class Order {
     }
 
 
-    public void cancelBasket() {
+    public void resetBasket() {
         basket = new ArrayList<>();
     }
 

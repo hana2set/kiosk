@@ -5,7 +5,7 @@
   * MenuInit - 초기화 로직
   * Order - 주문 관련 로직
   * Barista - 제조 관련 로직
-* Items - 상품 정보 모음
+* Menus - 상품 정보 모음
   * superobject - 인터페이스 모음
   * ItemMenu, OrderMenu - 기본 메뉴 정보
   * Ade, Coffe, Tea - 상세 메뉴 정보

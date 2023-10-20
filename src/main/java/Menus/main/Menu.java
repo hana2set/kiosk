@@ -1,4 +1,4 @@
-package Items.superobject;
+package Menus.main;
 
 public interface Menu {
     String name = "";
