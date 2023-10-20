@@ -22,16 +22,14 @@ public class Main {
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
             }
-            System.out.println("");
+            System.out.println();
         } catch (IOException e) {
             //banner.txt 없습니다
         }
 
         init.initMenuMap(order);
-        order.printMenu();
+        order.getMainMenu();
 
-        while (true) {
-            order.getInputValue();
-        }
+        order.getInputValue(); //scanner loop
     }
 }

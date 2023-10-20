@@ -20,7 +20,7 @@ public class Barista {
 
         Thread.sleep(3000);
 
-        System.out.println("");
+        System.out.println();
         System.out.println("=======================================");
 
         return true;
