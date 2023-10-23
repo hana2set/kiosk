@@ -1,22 +1,13 @@
 import constant.Color;
-import module.MenuInit;
-import module.Order;
+import module.MenuBook;
+import module.Kiosk;
 
 import java.io.*;
 
 public class Main {
     public static void main(String[] args) {
 
-        // 2. 메뉴판 띄우기
-        // 3. 메뉴 고르기
-        // 3. 장바구니 등록
-        // 4. 총액 계산
-        // 5. 결제
-
-        // 1. 메뉴판 초기화
-        MenuInit init = new MenuInit();
-        Order order = new Order();
-
+        // 배너 생성
         // http://patorjk.com/software/taag  Font Name: Bloody
         try (BufferedReader br = new BufferedReader(new FileReader("banner.txt"))) {
             String line;
@@ -29,9 +20,14 @@ public class Main {
             //banner.txt 없습니다
         }
 
-        init.initMenuMap(order);
-        order.getMainMenu();
+        // 메뉴판 초기화
+        MenuBook init = new MenuBook();
+        init.initMenuMap();
 
-        order.getInputValue(); //scanner loop
+        // 메뉴화면 띄우기
+        // 데이터 입력받기
+        Kiosk kiosk = new Kiosk();
+        kiosk.getMainMenu();
+        kiosk.getInputValue(); //scanner loop
     }
 }
