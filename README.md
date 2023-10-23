@@ -2,9 +2,10 @@
 ## 키오스크 
 
 * module
-  * MenuInit - 초기화 로직
-  * Order - 주문 관련 로직
-  * Barista - 제조 관련 로직
+  * MenuBook - 메뉴판
+  * Kiosk - 화면
+  * Basket - 장바구니
+  * Barista - 제조
 * Menus - 상품 정보 모음
   * superobject - 인터페이스 모음
   * ItemMenu, OrderMenu - 기본 메뉴 정보
