@@ -21,13 +21,13 @@ public class Kiosk {
     Basket basket = new Basket();                   //장바구니
 
     public void getInputValue() {
+        Scanner sc = new Scanner(System.in);
         while (true) {
             try {
-                Scanner sc = new Scanner(System.in);
-                int num = sc.nextInt();
-
                 System.out.println();
                 System.out.println("=======================================");
+
+                int num = sc.nextInt();
                 orderLevel = switch (orderLevel) {
                     case MAIN -> main(num);
                     case DETAIL -> detail(num);
@@ -40,6 +40,7 @@ public class Kiosk {
 
             } catch (InputMismatchException e) {
                 System.out.println("잘못된 입력값입니다.");
+                sc.next(); // 
             } catch (WrongInputException e) {
                 System.out.println(e.getMessage());
             } catch (Exception e) {
