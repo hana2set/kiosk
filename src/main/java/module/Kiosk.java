@@ -21,9 +21,9 @@ public class Kiosk {
     Basket basket = new Basket();                   //장바구니
 
     public void getInputValue() {
-        Scanner sc = new Scanner(System.in);
         while (true) {
             try {
+                Scanner sc = new Scanner(System.in);
                 int num = sc.nextInt();
 
                 System.out.println();
