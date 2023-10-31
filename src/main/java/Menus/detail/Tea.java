@@ -1,12 +1,10 @@
 package Menus.detail;
 
-import Menus.detail.DetailMenu;
 import Menus.main.ItemMenu;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public enum Tea implements DetailMenu {
+public enum Tea implements Item {
     CHAMOMILE("chamomile", 3000, "캐모마일"),
     EARLGREY("Earl Grey", 3800, "얼그레이"),
     GREEN("green", 3800, "녹차"),

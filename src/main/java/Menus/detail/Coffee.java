@@ -1,11 +1,10 @@
 package Menus.detail;
 
-import Menus.detail.DetailMenu;
 import Menus.main.ItemMenu;
 import lombok.*;
 
 @Getter
-public enum Coffee implements DetailMenu {
+public enum Coffee implements Item {
     ESPRESSO("espresso", 3000, "에스프레소"),
     AMERICANO("americano", 3000, "아메리카노"),
     CAFELATTE("cafe latte", 3500, "카페라떼"),

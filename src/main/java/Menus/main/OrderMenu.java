@@ -1,6 +1,5 @@
 package Menus.main;
 
-import Menus.main.Menu;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

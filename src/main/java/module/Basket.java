@@ -1,36 +1,14 @@
 package module;
 
-import dto.Item;
+import constant.Color;
+import dto.ItemBox;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Basket {
-
-    public static final List<Item> basket = new ArrayList<>();          //장바구니
-
-    public List<Item> getList() {
-        return basket;
-    }
-
-    public void add(Item _selectItem) {
-        Item selecttem = _selectItem;
-        long existCount = basket.stream()
-                .filter(item ->
-                        item.getMenu() == selecttem.getMenu() && item.isHasIce() == selecttem.isHasIce()
-                )
-                .limit(1)
-                .peek(item -> item.setCount(item.getCount() + selecttem.getCount()))
-                .count();
-        if (existCount == 0) {
-            basket.add(selecttem);
-        }
-    }
-
-    public void order() throws InterruptedException {
-        Barista.makeDrink(basket);
-        reset();
-    }
+    private List<ItemBox> basket = new ArrayList<>();          //장바구니
+    private Barista barista = new Barista();
 
     public void reset() {
         basket.clear();
@@ -38,6 +16,47 @@ public class Basket {
 
     public int size() {
         return basket.size();
+    }
+
+    public void add(ItemBox item) {
+        long existCount = basket.stream()
+                .filter(itemBox ->
+                        itemBox.getItem() == item.getItem() && itemBox.isHasIce() == item.isHasIce()
+                )
+                .limit(1)
+                .peek(itemBox -> itemBox.setCount(itemBox.getCount() + item.getCount()))
+                .count();
+        if (existCount == 0) {
+            basket.add(item);
+        }
+    }
+
+    public void order() throws InterruptedException {
+        barista.makeDrink(basket);
+        reset();
+    }
+
+    public String getListTxt() {
+        StringBuilder sb = new StringBuilder();
+
+        int maxTitlelength = basket.stream().mapToInt(m -> m.getItem().getName().length()).max().orElse(0);
+        int titleLength = Math.max(10, maxTitlelength);
+        for (ItemBox itemBox : basket) {
+            String iceText = itemBox.isHasIce()
+                    ? Color.ANSI_BLUE + "ICE" + Color.ANSI_RESET
+                    : Color.ANSI_RED + "HOT" + Color.ANSI_RESET;
+            sb.append(iceText).append(" ")
+                    .append(String.format("%-" + titleLength + "s", itemBox.getItem().getName()))
+                    .append(" |").append(String.format("%3s", itemBox.getCount())).append(" 개")
+                    .append(" | ₩ ").append(String.format("%5d", itemBox.calculateItemPrice()))
+                    .append(" | ").append(itemBox.getItem().getDesc())
+                    .append("\n");
+        }
+        return sb.toString();
+    }
+
+    public int getTotalPrice() {
+        return basket.stream().mapToInt(ItemBox::calculateItemPrice).sum();
     }
 
 }

@@ -1,12 +1,10 @@
 package Menus.detail;
 
-import Menus.detail.DetailMenu;
 import Menus.main.ItemMenu;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public enum Ade implements DetailMenu {
+public enum Ade implements Item {
     ORANGE("orange", 5500, "오렌지 에이드"),
     GRAPEFRUIT("grapefruit", 6000, "자몽 에이드"),
     LEMON("lemon", 6000, "레몬 에이드"),

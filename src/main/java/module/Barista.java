@@ -1,15 +1,14 @@
 package module;
 
 import constant.Color;
-import dto.Item;
+import dto.ItemBox;
 
-import javax.swing.plaf.ColorUIResource;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Barista {
-    static List<List<Item>> orderList = new ArrayList<>();
-    public static boolean makeDrink(List<Item> menus) throws InterruptedException {
+    static List<List<ItemBox>> orderList = new ArrayList<>();
+    public boolean makeDrink(List<ItemBox> menus) throws InterruptedException {
 
         orderList.add(menus);
 

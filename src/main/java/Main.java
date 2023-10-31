@@ -1,5 +1,4 @@
 import constant.Color;
-import module.MenuBook;
 import module.Kiosk;
 
 import java.io.*;
@@ -20,14 +19,8 @@ public class Main {
             //banner.txt 없습니다
         }
 
-        // 메뉴판 초기화
-        MenuBook init = new MenuBook();
-        init.initMenuMap();
-
-        // 메뉴화면 띄우기
         // 데이터 입력받기
         Kiosk kiosk = new Kiosk();
-        kiosk.getMainMenu();
         kiosk.getInputValue(); //scanner loop
     }
 }
