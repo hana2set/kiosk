@@ -1,14 +1,14 @@
 package module;
 
 import constant.Color;
-import dto.ItemBox;
+import dto.ItemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Barista {
-    static List<List<ItemBox>> orderList = new ArrayList<>();
-    public boolean makeDrink(List<ItemBox> menus) throws InterruptedException {
+    static List<List<ItemInfo>> orderList = new ArrayList<>();
+    public boolean makeDrink(List<ItemInfo> menus) throws InterruptedException {
 
         orderList.add(menus);
 
@@ -20,9 +20,6 @@ public class Barista {
         );
 
         Thread.sleep(3000);
-
-        System.out.println();
-        System.out.println("=======================================");
 
         return true;
     }

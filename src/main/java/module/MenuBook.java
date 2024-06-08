@@ -11,9 +11,9 @@ import Menus.main.OrderMenu;
 import java.util.*;
 
 public class MenuBook {
-    public List<String> menus = new ArrayList<>();
-    public ItemMenu[] itemMenus = ItemMenu.values();                //메뉴 목록
-    public OrderMenu[] orderMenus = OrderMenu.values();             //명령 목록
+    private List<String> menus = new ArrayList<>();
+    private ItemMenu[] itemMenus = ItemMenu.values();                //메뉴 목록
+    private OrderMenu[] orderMenus = OrderMenu.values();             //명령 목록
 
     public Map<Menu, List<Item>> itemsMenuMap = new HashMap<>();    //메뉴 - 상세 메뉴 맵
 
@@ -53,6 +53,10 @@ public class MenuBook {
 
     public int orderMenusSize() {
         return orderMenus.length;
+    }
+
+    public List<Item> get(Menu menu) {
+        return itemsMenuMap.get(menu);
     }
 
     public String getItemMenuTxt(Menu menu, int startNo) {

@@ -1,13 +1,13 @@
 package module;
 
 import constant.Color;
-import dto.ItemBox;
+import dto.ItemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Basket {
-    private List<ItemBox> basket = new ArrayList<>();          //장바구니
+    private List<ItemInfo> basket = new ArrayList<>();          //장바구니
     private Barista barista = new Barista();
 
     public void reset() {
@@ -18,13 +18,13 @@ public class Basket {
         return basket.size();
     }
 
-    public void add(ItemBox item) {
+    public void add(ItemInfo item) {
         long existCount = basket.stream()
-                .filter(itemBox ->
-                        itemBox.getItem() == item.getItem() && itemBox.isHasIce() == item.isHasIce()
+                .filter(itemInfo ->
+                        itemInfo.getItem() == item.getItem() && itemInfo.isHasIce() == item.isHasIce()
                 )
                 .limit(1)
-                .peek(itemBox -> itemBox.setCount(itemBox.getCount() + item.getCount()))
+                .peek(itemInfo -> itemInfo.setCount(itemInfo.getCount() + item.getCount()))
                 .count();
         if (existCount == 0) {
             basket.add(item);
@@ -41,22 +41,22 @@ public class Basket {
 
         int maxTitlelength = basket.stream().mapToInt(m -> m.getItem().getName().length()).max().orElse(0);
         int titleLength = Math.max(10, maxTitlelength);
-        for (ItemBox itemBox : basket) {
-            String iceText = itemBox.isHasIce()
+        for (ItemInfo itemInfo : basket) {
+            String iceText = itemInfo.isHasIce()
                     ? Color.ANSI_BLUE + "ICE" + Color.ANSI_RESET
                     : Color.ANSI_RED + "HOT" + Color.ANSI_RESET;
             sb.append(iceText).append(" ")
-                    .append(String.format("%-" + titleLength + "s", itemBox.getItem().getName()))
-                    .append(" |").append(String.format("%3s", itemBox.getCount())).append(" 개")
-                    .append(" | ₩ ").append(String.format("%5d", itemBox.calculateItemPrice()))
-                    .append(" | ").append(itemBox.getItem().getDesc())
+                    .append(String.format("%-" + titleLength + "s", itemInfo.getItem().getName()))
+                    .append(" |").append(String.format("%3s", itemInfo.getCount())).append(" 개")
+                    .append(" | ₩ ").append(String.format("%5d", itemInfo.calculateItemPrice()))
+                    .append(" | ").append(itemInfo.getItem().getDesc())
                     .append("\n");
         }
         return sb.toString();
     }
 
     public int getTotalPrice() {
-        return basket.stream().mapToInt(ItemBox::calculateItemPrice).sum();
+        return basket.stream().mapToInt(ItemInfo::calculateItemPrice).sum();
     }
 
 }

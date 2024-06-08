@@ -2,11 +2,10 @@
 ## 키오스크 
 
 * module
-  * MenuBook - 메뉴판
-  * Kiosk - 데이터 입력값 분기
-  * Order - 주문
+  * Kiosk - 주문
   * Print - 출력
   * Basket - 장바구니
+  * MenuBook - 메뉴판
   * Barista - 제조
 * Menus - 상품 정보 모음
   * ItemMenu, OrderMenu - 기본 메뉴 정보

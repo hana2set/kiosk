@@ -5,7 +5,7 @@ import Menus.detail.Item;
 import lombok.Data;
 
 @Data
-public class ItemBox {
+public class ItemInfo {
     private Item item;
     private boolean hasIce = true;
     private int count = 0;
