@@ -2,7 +2,7 @@ package module;
 
 import Menus.detail.Item;
 import Menus.main.ItemMenu;
-import constant.OrderLevel;
+import constant.Pointer;
 import dto.ItemBox;
 import error.WrongInputException;
 
@@ -15,16 +15,16 @@ public class Order {
     
     private Basket basket = new Basket();            //장바구니
 
-    public OrderLevel main(int num) throws WrongInputException {
-        OrderLevel orderLevel;
+    public Pointer main(int num) throws WrongInputException {
+        Pointer pointer;
         if (0 < num && num <= menuBook.itemMenusSize()) {
             // 상품 메뉴
             selectMenu = menuBook.getItemMenus(num - 1);
-            orderLevel = print.detailMenu(selectMenu);
+            pointer = print.detailMenu(selectMenu);
         } else if (basket.size() > 0 && num <= menuBook.itemMenusSize() + menuBook.orderMenusSize()) {
             // 주문 메뉴
             int orderIndex = num - menuBook.itemMenusSize() - 1;
-            orderLevel = switch (menuBook.getOrderMenus(orderIndex)) {
+            pointer = switch (menuBook.getOrderMenus(orderIndex)) {
                 case ORDER -> print.order(basket);
                 case CANCEL -> print.cancel();
             };
@@ -32,50 +32,50 @@ public class Order {
             throw new WrongInputException("잘못된 입력값입니다.");
         }
 
-        return orderLevel;
+        return pointer;
     }
 
-    public OrderLevel detail(int num) throws WrongInputException {
-        OrderLevel orderLevel = OrderLevel.DETAIL;
+    public Pointer detail(int num) throws WrongInputException {
+        Pointer pointer = Pointer.DETAIL;
 
         if (0 < num && num <= menuBook.itemsMenuMap.get(selectMenu).size()) {
             Item item = menuBook.itemsMenuMap.get(selectMenu).get(num - 1);
             selectItem.setItem(item);
             print.addBasket(item);
-            orderLevel = OrderLevel.ADD;
+            pointer = Pointer.ADD;
         } else {
             throw new WrongInputException("잘못된 입력값입니다.");
         }
 
-        return orderLevel;
+        return pointer;
     }
 
-    public OrderLevel add(int num) throws WrongInputException {
-        OrderLevel orderLevel = OrderLevel.ADD;
+    public Pointer add(int num) throws WrongInputException {
+        Pointer pointer = Pointer.ADD;
 
         if (num == 1) {
             selectItem.setCount(selectItem.getCount() + 1);
             if (selectMenu == ItemMenu.COFFEE
                     || selectMenu == ItemMenu.TEA) {
-                orderLevel = print.checkIce();
+                pointer = print.checkIce();
             } else {
                 basket.add(selectItem);
                 selectItem = new ItemBox();
-                orderLevel = print.mainMenu(basket);
+                pointer = print.mainMenu(basket);
             }
         } else if (num == 2) {
-            orderLevel = print.mainMenu(basket);
+            pointer = print.mainMenu(basket);
         } else if (num == 3) {
-            orderLevel = print.checkCount();
+            pointer = print.checkCount();
         } else {
             throw new WrongInputException("잘못된 입력값입니다.");
         }
 
-        return orderLevel;
+        return pointer;
     }
 
-    public OrderLevel checkCount(int num) throws WrongInputException {
-        OrderLevel orderLevel = OrderLevel.COUNTOPTION;
+    public Pointer checkCount(int num) throws WrongInputException {
+        Pointer pointer = Pointer.COUNTOPTION;
 
         if (0 < num && num < 100) {
             int totalCount = selectItem.getCount() + num;
@@ -83,73 +83,73 @@ public class Order {
                 selectItem.setCount(totalCount);
                 if (selectMenu == ItemMenu.COFFEE
                         || selectMenu == ItemMenu.TEA) {
-                    orderLevel = print.checkIce();
+                    pointer = print.checkIce();
                 } else {
                     basket.add(selectItem);
                     selectItem = new ItemBox();
-                    orderLevel = print.mainMenu(basket);
+                    pointer = print.mainMenu(basket);
                 }
             } else {
                 System.out.println("수량이 초과되었습니다.");
                 System.out.println();
-                orderLevel = print.addBasket(selectItem.getItem());
+                pointer = print.addBasket(selectItem.getItem());
             }
         } else {
             throw new WrongInputException("잘못된 입력값입니다.");
         }
 
-        return orderLevel;
+        return pointer;
     }
 
-    public OrderLevel checkIce(int num) throws WrongInputException {
-        OrderLevel orderLevel = OrderLevel.ICEOPTION;
+    public Pointer checkIce(int num) throws WrongInputException {
+        Pointer pointer = Pointer.ICEOPTION;
 
         if (num == 1) {
             selectItem.setHasIce(true);
             basket.add(selectItem);
             selectItem = new ItemBox();
-            orderLevel = print.mainMenu(basket);
+            pointer = print.mainMenu(basket);
         } else if (num == 2) {
             selectItem.setHasIce(false);
             basket.add(selectItem);
             selectItem = new ItemBox();
-            orderLevel = print.mainMenu(basket);
+            pointer = print.mainMenu(basket);
         } else {
             throw new WrongInputException("잘못된 입력값입니다.");
         }
 
-        return orderLevel;
+        return pointer;
     }
 
-    public OrderLevel order(int num) throws WrongInputException, InterruptedException {
-        OrderLevel orderLevel = OrderLevel.ORDER;
+    public Pointer order(int num) throws WrongInputException, InterruptedException {
+        Pointer pointer = Pointer.ORDER;
 
         if (num == 1) {
             basket.order();
-            orderLevel = print.mainMenu(basket);
+            pointer = print.mainMenu(basket);
         } else if (num == 2) {
-            orderLevel = print.mainMenu(basket);
+            pointer = print.mainMenu(basket);
         } else {
             throw new WrongInputException("잘못된 입력값입니다.");
         }
 
-        return orderLevel;
+        return pointer;
     }
 
     // 장바구니 초기화
-    public OrderLevel cancel(int num) throws WrongInputException {
-        OrderLevel orderLevel = OrderLevel.COUNTOPTION;
+    public Pointer cancel(int num) throws WrongInputException {
+        Pointer pointer = Pointer.COUNTOPTION;
 
         if (num == 1) {
             basket.reset();
-            orderLevel = print.mainMenu(basket);
+            pointer = print.mainMenu(basket);
         } else if (num == 2) {
-            orderLevel = print.mainMenu(basket);
+            pointer = print.mainMenu(basket);
         } else {
             throw new WrongInputException("잘못된 입력값입니다.");
         }
 
-        return orderLevel;
+        return pointer;
     }
 
 

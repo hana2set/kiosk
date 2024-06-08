@@ -1,16 +1,16 @@
 package module;
 
-import constant.OrderLevel;
+import constant.Pointer;
 import error.WrongInputException;
 
 import java.util.*;
 
 public class Kiosk {
-    private OrderLevel orderLevel = OrderLevel.MAIN;  //주문 계층 (화면 위치)
+    private Pointer pointer = Pointer.MAIN;  //주문 계층 (화면 위치)
     private Order order = new Order();                //주문 클래스
     private Printer print = new Printer();            //출력 클래스
 
-    public void getInputValue() {
+    public void start() {
         print.mainMenu();
 
         Scanner sc = new Scanner(System.in);
@@ -20,7 +20,7 @@ public class Kiosk {
                 System.out.println("=======================================");
 
                 int num = sc.nextInt();
-                orderLevel = switch (orderLevel) {
+                pointer = switch (pointer) {
                     case MAIN -> order.main(num);
                     case DETAIL -> order.detail(num);
                     case ADD -> order.add(num);

@@ -1,6 +1,6 @@
 package constant;
 
-public enum OrderLevel {
+public enum Pointer {
     MAIN,           // 메인화면
     DETAIL,         // 메뉴 상세보기
 

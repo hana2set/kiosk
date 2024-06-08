@@ -21,6 +21,6 @@ public class Main {
 
         // 데이터 입력받기
         Kiosk kiosk = new Kiosk();
-        kiosk.getInputValue(); //scanner loop
+        kiosk.start(); //scanner loop
     }
 }
