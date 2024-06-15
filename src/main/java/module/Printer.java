@@ -1,37 +1,29 @@
 package module;
 
-import Menus.detail.Item;
-import Menus.main.ItemMenu;
+import menus.Drink;
+import menus.Menu;
 
 public class Printer {
     private MenuBook menuBook = new MenuBook();             //메뉴
 
-    public void menu() {
-        System.out.println("[ 메뉴 ]");
-        System.out.println(menuBook.getItemMenuTxt(0));
+    public void error(String error) {
+        System.err.println(error);
     }
 
-    public void menu(Basket basket) {
-        System.out.println("=======================================");
-        System.out.println();
-        System.out.println("[ 메뉴 ]");
-        System.out.println(menuBook.getItemMenuTxt(0));
-        if (basket.size() > 0) {
-            System.out.println();
-            System.out.println("[ 주문확인 ]");
-            System.out.println(menuBook.getOrderMenuTxt(menuBook.itemMenusSize()));
-        }
+    public void menu(boolean isBasketEmpty) {
+        System.out.println(menuBook.getMenuTxt(isBasketEmpty));
     }
 
-    public void detailMenu(ItemMenu menu) {
+
+    public void detailMenu(Menu menu) {
         System.out.println("[ 상세 메뉴 목록 ]");
-        System.out.println(menuBook.getItemMenuTxt(menu, 0));
+        System.out.println(menuBook.getItemMenuTxt(menu));
     }
 
-    public void addBasket(Item item) {
+    public void addBasket(Drink drink) {
         System.out.println("=======================================");
         System.out.println();
-        System.out.println(menuBook.getItemTxt(item));
+        System.out.println(menuBook.getDrinkTxt(drink));
         System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
         System.out.println();
         System.out.println("1. 확인       2. 취소       3.수량 선택");

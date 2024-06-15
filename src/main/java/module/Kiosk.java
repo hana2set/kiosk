@@ -1,9 +1,8 @@
 package module;
 
-import Menus.detail.Item;
-import Menus.main.ItemMenu;
-import Menus.main.OrderMenu;
-import dto.ItemInfo;
+import menus.Drink;
+import menus.Menu;
+import dto.Select;
 import error.WrongInputException;
 
 import java.util.*;
@@ -13,10 +12,10 @@ public class Kiosk {
     private Printer print = new Printer();          //출력
 
     private MenuBook menuBook = new MenuBook();     //메뉴
-    private ItemMenu selectMenu;                    //선택된 상세 메뉴
-    private ItemInfo selectItemInfo = new ItemInfo();     //선택된 상품
+    private Menu selectMenu;                        //선택된 상세 메뉴
+    private Select select = new Select();           //선택된 상품
 
-    private Basket basket = new Basket();            //장바구니
+    private Basket basket = new Basket();           //장바구니
 
 
     public void start() {
@@ -24,50 +23,44 @@ public class Kiosk {
             try {
                 getOrder();
             } catch (InputMismatchException e) {
-                System.out.println("잘못된 입력값입니다.");
-                sc.next(); //
+                print.error("잘못된 입력값입니다.");
+                sc.next(); // int 아닌값 제거
             } catch (WrongInputException e) {
-                System.out.println(e.getMessage());
+                print.error(e.getMessage());
             } catch (Exception e) {
-                System.out.println("에러를 견디지 못하고 시스템이 종료됩니다.");
+                print.error("에러를 견디지 못하고 시스템이 종료됩니다.");
                 //TODO error to file
+                e.printStackTrace();
                 System.exit(0);
             }
         }
     }
 
     private void getOrder() throws WrongInputException, InterruptedException {
-        print.menu(basket);
+        print.menu(basket.isEmpty());
         int num = sc.nextInt();
 
-        boolean isItemMenu = 0 < num && num <= menuBook.itemMenusSize();
-        boolean isOrderMenu = basket.size() > 0 && num <= menuBook.itemMenusSize() + menuBook.orderMenusSize();
+        Menu menu = menuBook.getMenus(num - 1);;
 
-        if (isItemMenu) {
-            getDetailMenu(menuBook.getItemMenus(num - 1));
-        } else if (isOrderMenu) {
-            getOrderMenu(menuBook.getOrderMenus(num - menuBook.itemMenusSize() - 1));
+        if (menu.getCategory() == Menu.Category.ITEM) {
+            getDetailMenu(menu);
         } else {
-            throw new WrongInputException("잘못된 입력값입니다.");
+            getOrderMenu(menu);
         }
     }
 
-    private void getDetailMenu(ItemMenu menu) throws WrongInputException {
+    private void getDetailMenu(Menu menu) throws WrongInputException {
         selectMenu = menu;
         print.detailMenu(menu);
         int num = sc.nextInt();
 
-        boolean isDetailMenu = 0 < num && num <= menuBook.get(selectMenu).size();
+        Drink drink = menuBook.get(menu, num-1);
 
-        if (isDetailMenu) {
-            selectItemInfo.setItem(menuBook.get(selectMenu).get(num-1));
-            addMenuInBasket(selectItemInfo.getItem());
-        } else {
-            throw new WrongInputException("잘못된 입력값입니다.");
-        }
+        select.setDrink(drink);
+        addMenuInBasket(drink);
     }
 
-    private void getOrderMenu(OrderMenu menu) throws InterruptedException, WrongInputException {
+    private void getOrderMenu(Menu menu) throws InterruptedException, WrongInputException {
         switch (menu) {
             case ORDER -> order();
             case CANCEL -> orderCancel();
@@ -78,20 +71,20 @@ public class Kiosk {
         }
     }
 
-    private void addMenuInBasket(Item menu) throws WrongInputException {
-        print.addBasket(menu);
+    private void addMenuInBasket(Drink drink) throws WrongInputException {
+        print.addBasket(drink);
         int num = sc.nextInt();
 
         if (num == 1) {
-            selectItemInfo.setCount(selectItemInfo.getCount() + 1);
-            if (selectMenu == ItemMenu.COFFEE
-                    || selectMenu == ItemMenu.TEA) {
+            select.setCount(select.getCount() + 1);
+            if (selectMenu == Menu.COFFEE
+                    || selectMenu == Menu.TEA) {
                 checkIce();
             } else {
                 addBasket();
             }
         } else if (num == 2) {
-            print.menu(basket);
+            print.menu(basket.isEmpty());
         } else if (num == 3) {
             checkCount();
         } else {
@@ -100,9 +93,9 @@ public class Kiosk {
     }
 
     private void addBasket() {
-        basket.add(selectItemInfo);
+        basket.add(select);
 
-        selectItemInfo = new ItemInfo();
+        select = new Select();
     }
 
     private void checkCount() throws WrongInputException {
@@ -110,11 +103,11 @@ public class Kiosk {
         int num = sc.nextInt();
 
         if ( 0 < num && num < 100) {
-            int totalCount = selectItemInfo.getCount() + num;
+            int totalCount = select.getCount() + num;
             if (num < 100) {
-                selectItemInfo.setCount(totalCount);
-                if (selectMenu == ItemMenu.COFFEE
-                        || selectMenu == ItemMenu.TEA) {
+                select.setCount(totalCount);
+                if (selectMenu == Menu.COFFEE
+                        || selectMenu == Menu.TEA) {
                     checkIce();
                 } else {
                     addBasket();
@@ -122,7 +115,7 @@ public class Kiosk {
             } else {
                 System.out.println("수량이 초과되었습니다.");
                 System.out.println("");
-                addMenuInBasket(selectItemInfo.getItem());
+                addMenuInBasket(select.getDrink());
             }
         } else {
             throw new WrongInputException("잘못된 입력값입니다.");
@@ -135,9 +128,9 @@ public class Kiosk {
         int num = sc.nextInt();
 
         if (num == 1) {
-            selectItemInfo.setHasIce(true);
+            select.setHasIce(true);
         } else if (num == 2) {
-            selectItemInfo.setHasIce(false);
+            select.setHasIce(false);
         } else {
             throw new WrongInputException("잘못된 입력값입니다.");
         }
@@ -156,6 +149,7 @@ public class Kiosk {
 
         if (num == 1) {
             basket.order();
+            basket = new Basket();
         } else {
             throw new WrongInputException("잘못된 입력값입니다.");
         }

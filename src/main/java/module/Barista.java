@@ -1,16 +1,16 @@
 package module;
 
 import constant.Color;
-import dto.ItemInfo;
+import dto.Select;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Barista {
-    static List<List<ItemInfo>> orderList = new ArrayList<>();
-    public boolean makeDrink(List<ItemInfo> menus) throws InterruptedException {
+    static List<Select> orderList = new ArrayList<>();
+    public boolean makeDrink(List<Select> basket) throws InterruptedException {
 
-        orderList.add(menus);
+        orderList.addAll(basket);
 
         System.out.println(
                 "주문이 완료되었습니다!\n" +

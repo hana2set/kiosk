@@ -1,72 +1,55 @@
 package module;
 
-import Menus.detail.Item;
-import Menus.main.ItemMenu;
-import Menus.detail.Ade;
-import Menus.detail.Coffee;
-import Menus.main.Menu;
-import Menus.detail.Tea;
-import Menus.main.OrderMenu;
+import menus.Drink;
+import menus.Menu;
+import error.WrongInputException;
 
 import java.util.*;
+import java.util.List;
 
 public class MenuBook {
-    private List<String> menus = new ArrayList<>();
-    private ItemMenu[] itemMenus = ItemMenu.values();                //메뉴 목록
-    private OrderMenu[] orderMenus = OrderMenu.values();             //명령 목록
 
-    public Map<Menu, List<Item>> itemsMenuMap = new HashMap<>();    //메뉴 - 상세 메뉴 맵
+    private Menu[] menus = Menu.values();             //메뉴 목록
+    private Map<Menu, List<Drink>> itemMap = new HashMap<>();    //메뉴 - 상세 메뉴 맵
+
+    int titleLength; // 메뉴 제목 최대 크기
 
     public MenuBook() {
-        Arrays.stream(Coffee.values())
+        Arrays.stream(Drink.values())
                 .forEach(item -> {
-                    itemsMenuMap.computeIfAbsent(ItemMenu.COFFEE, k -> new ArrayList<>());
-                    itemsMenuMap.get(ItemMenu.COFFEE).add(item);
+                    itemMap.computeIfAbsent(item.getCategory(), k -> new ArrayList<>());
+                    itemMap.get(item.getCategory()).add(item);
                 });
 
-        Arrays.stream(Tea.values())
-                .forEach(item -> {
-                    itemsMenuMap.computeIfAbsent(ItemMenu.TEA, k -> new ArrayList<>());
-                    itemsMenuMap.get(ItemMenu.TEA).add(item);
-                });
-
-        Arrays.stream(Ade.values())
-                .forEach(item -> {
-                    itemsMenuMap.computeIfAbsent(ItemMenu.ETC, k -> new ArrayList<>());
-                    itemsMenuMap.get(ItemMenu.ETC).add(item);
-                });
-
-        
+        titleLength = Math.max(
+                10,
+                Arrays.stream(menus).mapToInt(m -> m.getName().length()).max().orElse(0));
     }
 
-    public ItemMenu getItemMenus(int num) {
-        return itemMenus[num];
+    public Menu getMenus(int num) throws WrongInputException {
+        if (menus.length <= num) {
+            throw new WrongInputException("잘못된 입력값입니다.");
+        }
+        return menus[num];
     }
 
-    public OrderMenu getOrderMenus(int num) {
-        return orderMenus[num];
+    public List<Drink> get(Menu menu) {
+        return itemMap.get(menu);
     }
 
-    public int itemMenusSize() {
-        return itemMenus.length;
+    public Drink get(Menu menu, int num) throws WrongInputException {
+        if (itemMap.get(menu).size() <= num) {
+            throw new WrongInputException("잘못된 입력값입니다.");
+        }
+        return itemMap.get(menu).get(num);
     }
 
-    public int orderMenusSize() {
-        return orderMenus.length;
-    }
-
-    public List<Item> get(Menu menu) {
-        return itemsMenuMap.get(menu);
-    }
-
-    public String getItemMenuTxt(Menu menu, int startNo) {
-        List<Item> items =  itemsMenuMap.get(menu);
+    public String getItemMenuTxt(Menu menu) {
+        List<Drink> items =  itemMap.get(menu);
         StringBuilder sb = new StringBuilder();
 
-        int maxTitlelength = items.stream().mapToInt(m -> m.getName().length()).max().orElse(0);
-        int titleLength = Math.max(10, maxTitlelength);
         for (int i = 0; i < items.size(); i++) {
-            sb.append(startNo + i + 1)
+            sb.append(i + 1)
                     .append(". ").append(String.format("%-" + titleLength + "s", items.get(i).getName()))
                     .append(" | ₩ ").append(String.format("%5d", items.get(i).getPrice()))
                     .append(" | ").append(items.get(i).getDesc())
@@ -75,44 +58,46 @@ public class MenuBook {
         return sb.toString();
     }
 
-    public String getItemMenuTxt(int startNo) {
-        Menu[] menus = itemMenus;
+    public String getMenuTxt(boolean isBasketEmpty) {
+        Menu[] menus = Menu.values();
         StringBuilder sb = new StringBuilder();
 
-        int maxTitlelength = Arrays.stream(menus).mapToInt(m -> m.getName().length()).max().orElse(0);
-        int titleLength = Math.max(10, maxTitlelength);
-        for (int i = 0; i < menus.length; i++) {
-            sb.append(startNo + i + 1)
+        sb.append("=======================================")
+                .append("\n")
+                .append("[ 메뉴 ]")
+                .append("\n");
+
+        int i = 0;
+        for (; i < menus.length; i++) {
+            if (menus[i].getCategory() != Menu.Category.ITEM) break;
+            sb.append(i + 1)
                     .append(". ").append(String.format("%-" + titleLength + "s", menus[i].getName()))
                     .append(" | ").append(menus[i].getDesc())
                     .append("\n");
         }
-        return sb.toString();
-    }
 
-    public String getOrderMenuTxt(int startNo) {
-        Menu[] menus = orderMenus;
-        StringBuilder sb = new StringBuilder();
-
-        int maxTitlelength = Arrays.stream(menus).mapToInt(m -> m.getName().length()).max().orElse(0);
-        int titleLength = Math.max(10, maxTitlelength);
-        for (int i = 0; i < menus.length; i++) {
-            sb.append(startNo + i + 1)
-                    .append(". ").append(String.format("%-" + titleLength + "s", menus[i].getName()))
-                    .append(" | ").append(menus[i].getDesc())
+        if (isBasketEmpty == false) {
+            sb.append("\n")
+                    .append("[ 주문확인 ]")
                     .append("\n");
+
+            for (; i < menus.length; i++) {
+                sb.append(i + 1)
+                        .append(". ").append(String.format("%-" + titleLength + "s", menus[i].getName()))
+                        .append(" | ").append(menus[i].getDesc())
+                        .append("\n");
+            }
         }
+
         return sb.toString();
     }
 
-    public String getItemTxt(Item item) {
+    public String getDrinkTxt(Drink drink) {
         StringBuilder sb = new StringBuilder();
 
-        int maxTitlelength = item.getName().length();
-        int titleLength = Math.max(10, maxTitlelength);
-        sb.append(String.format("%-" + titleLength + "s", item.getName()))
-                .append(" | ₩ ").append(String.format("%5d", item.getPrice()))
-                .append(" | ").append(item.getDesc())
+        sb.append(String.format("%-" + titleLength + "s", drink.getName()))
+                .append(" | ₩ ").append(String.format("%5d", drink.getPrice()))
+                .append(" | ").append(drink.getDesc())
                 .append("\n");
 
         return sb.toString();

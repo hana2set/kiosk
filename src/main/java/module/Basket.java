@@ -1,13 +1,13 @@
 package module;
 
 import constant.Color;
-import dto.ItemInfo;
+import dto.Select;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Basket {
-    private List<ItemInfo> basket = new ArrayList<>();          //장바구니
+    private List<Select> basket = new ArrayList<>();          //장바구니
     private Barista barista = new Barista();
 
     public void reset() {
@@ -18,13 +18,17 @@ public class Basket {
         return basket.size();
     }
 
-    public void add(ItemInfo item) {
+    public boolean isEmpty() {
+        return basket.isEmpty();
+    }
+
+    public void add(Select item) {
         long existCount = basket.stream()
-                .filter(itemInfo ->
-                        itemInfo.getItem() == item.getItem() && itemInfo.isHasIce() == item.isHasIce()
+                .filter(select ->
+                        select.getDrink() == item.getDrink() && select.isHasIce() == item.isHasIce()
                 )
                 .limit(1)
-                .peek(itemInfo -> itemInfo.setCount(itemInfo.getCount() + item.getCount()))
+                .peek(select -> select.setCount(select.getCount() + item.getCount()))
                 .count();
         if (existCount == 0) {
             basket.add(item);
@@ -39,24 +43,24 @@ public class Basket {
     public String getListTxt() {
         StringBuilder sb = new StringBuilder();
 
-        int maxTitlelength = basket.stream().mapToInt(m -> m.getItem().getName().length()).max().orElse(0);
+        int maxTitlelength = basket.stream().mapToInt(m -> m.getDrink().getName().length()).max().orElse(0);
         int titleLength = Math.max(10, maxTitlelength);
-        for (ItemInfo itemInfo : basket) {
-            String iceText = itemInfo.isHasIce()
+        for (Select select : basket) {
+            String iceText = select.isHasIce()
                     ? Color.ANSI_BLUE + "ICE" + Color.ANSI_RESET
                     : Color.ANSI_RED + "HOT" + Color.ANSI_RESET;
             sb.append(iceText).append(" ")
-                    .append(String.format("%-" + titleLength + "s", itemInfo.getItem().getName()))
-                    .append(" |").append(String.format("%3s", itemInfo.getCount())).append(" 개")
-                    .append(" | ₩ ").append(String.format("%5d", itemInfo.calculateItemPrice()))
-                    .append(" | ").append(itemInfo.getItem().getDesc())
+                    .append(String.format("%-" + titleLength + "s", select.getDrink().getName()))
+                    .append(" |").append(String.format("%3s", select.getCount())).append(" 개")
+                    .append(" | ₩ ").append(String.format("%5d", select.calculateItemPrice()))
+                    .append(" | ").append(select.getDrink().getDesc())
                     .append("\n");
         }
         return sb.toString();
     }
 
     public int getTotalPrice() {
-        return basket.stream().mapToInt(ItemInfo::calculateItemPrice).sum();
+        return basket.stream().mapToInt(Select::calculateItemPrice).sum();
     }
 
 }
