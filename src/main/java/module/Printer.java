@@ -1,6 +1,6 @@
 package module;
 
-import menus.Drink;
+import menus.Item;
 import menus.Menu;
 
 public class Printer {
@@ -20,10 +20,10 @@ public class Printer {
         System.out.println(menuBook.getItemMenuTxt(menu));
     }
 
-    public void addBasket(Drink drink) {
+    public void addBasket(Item item) {
         System.out.println("=======================================");
         System.out.println();
-        System.out.println(menuBook.getDrinkTxt(drink));
+        System.out.println(menuBook.getDrinkTxt(item));
         System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
         System.out.println();
         System.out.println("1. 확인       2. 취소       3.수량 선택");

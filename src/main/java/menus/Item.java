@@ -3,7 +3,7 @@ package menus;
 import lombok.*;
 
 @Getter
-public enum Drink {
+public enum Item {
     ESPRESSO(Menu.COFFEE, "espresso", 3000, "에스프레소"),
     AMERICANO(Menu.COFFEE, "americano", 3000, "아메리카노"),
     CAFELATTE(Menu.COFFEE, "cafe latte", 3500, "카페라떼"),
@@ -22,13 +22,13 @@ public enum Drink {
     BLUELEMON(Menu.ETC, "blue lemon", 6000, "블루레몬 에이드"),
     ;
 
-    private Menu category;
+    private Menu menu;
     private String name;
     private int price;
     private String desc;
 
-    Drink(Menu category, String name, int price, String desc) {
-        this.category = category;
+    Item(Menu menu, String name, int price, String desc) {
+        this.menu = menu;
         this.name = name;
         this.price = price;
         this.desc = desc;

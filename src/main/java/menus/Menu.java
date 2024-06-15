@@ -9,7 +9,7 @@ import java.util.Arrays;
 @Getter
 @AllArgsConstructor
 public enum Menu {
-    COFFEE(Category.ITEM, "Drink", "커피"),
+    COFFEE(Category.ITEM, "Item", "커피"),
     TEA(Category.ITEM, "Tea", "차"),
     ETC(Category.ITEM, "Fruit Juice & Ade", "과일주스 및 에이드"),
 
@@ -24,8 +24,8 @@ public enum Menu {
 
 
     public enum Category {
-        ITEM,
-        ORDER,
+        ITEM, //상품
+        ORDER, //주문
         ;
     }
 

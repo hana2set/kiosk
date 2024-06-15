@@ -1,6 +1,6 @@
 package module;
 
-import menus.Drink;
+import menus.Item;
 import menus.Menu;
 import error.WrongInputException;
 
@@ -10,15 +10,15 @@ import java.util.List;
 public class MenuBook {
 
     private Menu[] menus = Menu.values();             //메뉴 목록
-    private Map<Menu, List<Drink>> itemMap = new HashMap<>();    //메뉴 - 상세 메뉴 맵
+    private Map<Menu, List<Item>> itemMap = new HashMap<>();    //메뉴 - 상세 메뉴 맵
 
     int titleLength; // 메뉴 제목 최대 크기
 
     public MenuBook() {
-        Arrays.stream(Drink.values())
+        Arrays.stream(Item.values())
                 .forEach(item -> {
-                    itemMap.computeIfAbsent(item.getCategory(), k -> new ArrayList<>());
-                    itemMap.get(item.getCategory()).add(item);
+                    itemMap.computeIfAbsent(item.getMenu(), k -> new ArrayList<>());
+                    itemMap.get(item.getMenu()).add(item);
                 });
 
         titleLength = Math.max(
@@ -33,11 +33,11 @@ public class MenuBook {
         return menus[num];
     }
 
-    public List<Drink> get(Menu menu) {
+    public List<Item> get(Menu menu) {
         return itemMap.get(menu);
     }
 
-    public Drink get(Menu menu, int num) throws WrongInputException {
+    public Item get(Menu menu, int num) throws WrongInputException {
         if (itemMap.get(menu).size() <= num) {
             throw new WrongInputException("잘못된 입력값입니다.");
         }
@@ -45,7 +45,7 @@ public class MenuBook {
     }
 
     public String getItemMenuTxt(Menu menu) {
-        List<Drink> items =  itemMap.get(menu);
+        List<Item> items =  itemMap.get(menu);
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < items.size(); i++) {
@@ -92,12 +92,12 @@ public class MenuBook {
         return sb.toString();
     }
 
-    public String getDrinkTxt(Drink drink) {
+    public String getDrinkTxt(Item item) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(String.format("%-" + titleLength + "s", drink.getName()))
-                .append(" | ₩ ").append(String.format("%5d", drink.getPrice()))
-                .append(" | ").append(drink.getDesc())
+        sb.append(String.format("%-" + titleLength + "s", item.getName()))
+                .append(" | ₩ ").append(String.format("%5d", item.getPrice()))
+                .append(" | ").append(item.getDesc())
                 .append("\n");
 
         return sb.toString();

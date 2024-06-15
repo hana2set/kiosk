@@ -1,6 +1,6 @@
 package module;
 
-import menus.Drink;
+import menus.Item;
 import menus.Menu;
 import dto.Select;
 import error.WrongInputException;
@@ -50,14 +50,13 @@ public class Kiosk {
     }
 
     private void getDetailMenu(Menu menu) throws WrongInputException {
-        selectMenu = menu;
         print.detailMenu(menu);
         int num = sc.nextInt();
 
-        Drink drink = menuBook.get(menu, num-1);
+        Item item = menuBook.get(menu, num-1);
 
-        select.setDrink(drink);
-        addMenuInBasket(drink);
+        select.setItem(item);
+        addMenuInBasket(item);
     }
 
     private void getOrderMenu(Menu menu) throws InterruptedException, WrongInputException {
@@ -71,14 +70,16 @@ public class Kiosk {
         }
     }
 
-    private void addMenuInBasket(Drink drink) throws WrongInputException {
-        print.addBasket(drink);
+    private void addMenuInBasket(Item item) throws WrongInputException {
+        print.addBasket(item);
         int num = sc.nextInt();
 
         if (num == 1) {
             select.setCount(select.getCount() + 1);
-            if (selectMenu == Menu.COFFEE
-                    || selectMenu == Menu.TEA) {
+
+            Menu menu = select.getItem().getMenu();
+            if (menu == Menu.COFFEE
+                    || menu == Menu.TEA) {
                 checkIce();
             } else {
                 addBasket();
@@ -106,8 +107,10 @@ public class Kiosk {
             int totalCount = select.getCount() + num;
             if (num < 100) {
                 select.setCount(totalCount);
-                if (selectMenu == Menu.COFFEE
-                        || selectMenu == Menu.TEA) {
+
+                Menu menu = select.getItem().getMenu();
+                if (menu == Menu.COFFEE
+                        || menu == Menu.TEA) {
                     checkIce();
                 } else {
                     addBasket();
@@ -115,7 +118,7 @@ public class Kiosk {
             } else {
                 System.out.println("수량이 초과되었습니다.");
                 System.out.println("");
-                addMenuInBasket(select.getDrink());
+                addMenuInBasket(select.getItem());
             }
         } else {
             throw new WrongInputException("잘못된 입력값입니다.");

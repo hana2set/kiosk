@@ -25,7 +25,7 @@ public class Basket {
     public void add(Select item) {
         long existCount = basket.stream()
                 .filter(select ->
-                        select.getDrink() == item.getDrink() && select.isHasIce() == item.isHasIce()
+                        select.getItem() == item.getItem() && select.isHasIce() == item.isHasIce()
                 )
                 .limit(1)
                 .peek(select -> select.setCount(select.getCount() + item.getCount()))
@@ -43,17 +43,17 @@ public class Basket {
     public String getListTxt() {
         StringBuilder sb = new StringBuilder();
 
-        int maxTitlelength = basket.stream().mapToInt(m -> m.getDrink().getName().length()).max().orElse(0);
+        int maxTitlelength = basket.stream().mapToInt(m -> m.getItem().getName().length()).max().orElse(0);
         int titleLength = Math.max(10, maxTitlelength);
         for (Select select : basket) {
             String iceText = select.isHasIce()
                     ? Color.ANSI_BLUE + "ICE" + Color.ANSI_RESET
                     : Color.ANSI_RED + "HOT" + Color.ANSI_RESET;
             sb.append(iceText).append(" ")
-                    .append(String.format("%-" + titleLength + "s", select.getDrink().getName()))
+                    .append(String.format("%-" + titleLength + "s", select.getItem().getName()))
                     .append(" |").append(String.format("%3s", select.getCount())).append(" 개")
                     .append(" | ₩ ").append(String.format("%5d", select.calculateItemPrice()))
-                    .append(" | ").append(select.getDrink().getDesc())
+                    .append(" | ").append(select.getItem().getDesc())
                     .append("\n");
         }
         return sb.toString();
